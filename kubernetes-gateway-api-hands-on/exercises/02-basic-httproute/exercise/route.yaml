@@ -5,11 +5,11 @@ metadata:
   namespace: gateway-lab
 spec:
   parentRefs:
-    - name: ________
+    - name: lab-gateway
       kind: Gateway
   hostnames:
-    - ________
+    - basic.gateway.local
   rules:
     - backendRefs:
-        - name: ________
-          port: ________
+        - name: stable
+          port: 8080

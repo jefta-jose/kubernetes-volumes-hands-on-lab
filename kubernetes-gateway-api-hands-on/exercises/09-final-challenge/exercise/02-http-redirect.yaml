@@ -1,19 +1,21 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  # The application team owns the redirect behavior.
   name: final-http-redirect
   namespace: team-a
 spec:
   parentRefs:
+    # Attach only to the plain HTTP listener, not the HTTPS listener.
     - name: production-gateway
       namespace: infra
-      sectionName: ________
+      sectionName: http
   hostnames:
     - app.final.gateway.local
   rules:
+    # Every matching HTTP request receives a permanent HTTPS redirect.
     - filters:
-        - type: ________
+        - type: RequestRedirect
           requestRedirect:
-            scheme: ________
-            port: 443
-            statusCode: ________
+            scheme: https
+            statusCode: 301

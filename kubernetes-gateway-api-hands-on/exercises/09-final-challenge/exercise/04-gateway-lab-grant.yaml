@@ -1,20 +1,25 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
+  # Grants belong in the namespace containing the referenced resources.
   name: allow-final-route-to-app-services
   namespace: gateway-lab
 spec:
   from:
+    # final-application is an HTTPRoute in team-a. It—not the Gateway—is
+    # making these backend and mirror references.
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      namespace: ________
+      namespace: team-a
   to:
+    # Services use the Kubernetes core API group, represented by "".
+    # Naming each Service keeps the permission narrowly scoped.
     - group: ""
       kind: Service
       name: stable
     - group: ""
       kind: Service
-      name: ________
+      name: canary
     - group: ""
       kind: Service
       name: mirror

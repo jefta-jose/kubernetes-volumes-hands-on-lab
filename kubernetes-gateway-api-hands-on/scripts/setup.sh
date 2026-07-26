@@ -13,6 +13,6 @@ cat <<'EOF'
 Setup complete.
 
 Begin with:
-  cd exercises/01-gatewayclass-and-gateway
+  cd exercises/00-environment-setup
   cat README.md
 EOF

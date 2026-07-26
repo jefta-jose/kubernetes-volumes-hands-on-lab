@@ -1,16 +1,21 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  # team-a owns the application routing rules, independently of the
+  # platform-owned Gateway in infra.
   name: final-application
   namespace: team-a
 spec:
   parentRefs:
+    # Attach these rules only to the TLS-terminating HTTPS listener.
     - name: production-gateway
       namespace: infra
-      sectionName: ________
+      sectionName: https
   hostnames:
     - app.final.gateway.local
   rules:
+    # The path and header combination is more specific than the next /api
+    # rule, so X-Release: canary forces the request to the canary Service.
     - matches:
         - path:
             type: PathPrefix
@@ -18,11 +23,13 @@ spec:
           headers:
             - name: X-Release
               type: Exact
-              value: ________
+              value: canary
       backendRefs:
         - name: canary
           namespace: gateway-lab
           port: 8080
+
+    # Normal /api traffic is split 90/10 between stable and canary.
     - matches:
         - path:
             type: PathPrefix
@@ -31,18 +38,23 @@ spec:
         - name: stable
           namespace: gateway-lab
           port: 8080
-          weight: ________
+          weight: 90
         - name: canary
           namespace: gateway-lab
           port: 8080
-          weight: ________
+          weight: 10
+
+      # Mirroring sends a copy to mirror without making it a normal backend.
       filters:
-        - type: ________
+        - type: RequestMirror
           requestMirror:
             backendRef:
               name: mirror
               namespace: gateway-lab
               port: 8080
+
+    # Preserve the suffix while changing /legacy to /api. For example,
+    # /legacy/users becomes /api/users before it reaches stable.
     - matches:
         - path:
             type: PathPrefix
@@ -51,13 +63,15 @@ spec:
         - type: URLRewrite
           urlRewrite:
             path:
-              type: ________
+              type: ReplacePrefixMatch
               replacePrefixMatch: /api
       backendRefs:
         - name: stable
           namespace: gateway-lab
           port: 8080
+
+    # A rule without matches is the fallback for all remaining HTTPS traffic.
     - backendRefs:
-        - name: ________
+        - name: shared-api
           namespace: shared-services
           port: 8080

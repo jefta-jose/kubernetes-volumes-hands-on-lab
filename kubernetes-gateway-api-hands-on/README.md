@@ -2,7 +2,7 @@
 
 A progressive, fill-in-the-blank project for practising Kubernetes Gateway API locally.
 
-The project uses **Envoy Gateway v1.8.3** as the Gateway API implementation and deploys small HTTP echo applications that make routing decisions visible in responses and Pod logs.
+The project uses **Envoy Gateway v1.8.2** as the Gateway API implementation and deploys small HTTP echo applications that make routing decisions visible in responses and Pod logs.
 
 ## What you will practise
 
@@ -21,6 +21,7 @@ The project uses **Envoy Gateway v1.8.3** as the Gateway API implementation and 
 ```text
 kubernetes-gateway-api-hands-on/
 ├── exercises/
+│   ├── 00-environment-setup/
 │   ├── 01-gatewayclass-and-gateway/
 │   ├── 02-basic-httproute/
 │   ├── 03-path-and-header-routing/
@@ -81,14 +82,21 @@ make status
 
 The Minikube setup creates one control-plane node and two worker nodes.
 
+If you already have a cluster, do not run `make setup` until you have read
+[Exercise 00](exercises/00-environment-setup/README.md). The default setup uses
+the Minikube profile `gateway-api-lab`; Exercise 00 shows how to prepare the
+currently selected cluster without accidentally creating another one.
+
 ## Work through an exercise
 
-Start with exercise 1:
+Start with Exercise 00 to prepare and verify the cluster:
 
 ```bash
-cd exercises/01-gatewayclass-and-gateway
+cd exercises/00-environment-setup
 cat README.md
 ```
+
+After its validation passes, continue to Exercise 1.
 
 Edit the files under `exercise/` and replace every:
 

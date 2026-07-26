@@ -1,0 +1,14 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: lab-proxy-config
+  namespace: gateway-lab
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      # Local kind clusters do not provide an external LoadBalancer by default.
+      # The lab reaches this Service with kubectl port-forward, so ClusterIP is
+      # sufficient and allows the Gateway to receive a usable address.
+      envoyService:
+        type: ClusterIP

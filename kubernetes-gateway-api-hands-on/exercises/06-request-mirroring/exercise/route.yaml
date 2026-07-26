@@ -10,11 +10,11 @@ spec:
     - mirror.gateway.local
   rules:
     - backendRefs:
-        - name: ________
+        - name: stable
           port: 8080
       filters:
-        - type: ________
+        - type: RequestMirror
           requestMirror:
             backendRef:
-              name: ________
+              name: mirror
               port: 8080

@@ -6,24 +6,29 @@ metadata:
 spec:
   parentRefs:
     - name: lab-gateway
+
   hostnames:
     - filters.gateway.local
+
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: ________
+            value: /legacy
+
       filters:
-        - type: ________
+        - type: URLRewrite
           urlRewrite:
             path:
-              type: ________
-              replacePrefixMatch: ________
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /api
+
         - type: RequestHeaderModifier
           requestHeaderModifier:
             set:
-              - name: ________
-                value: ________
+              - name: X-Gateway-Lab
+                value: rewritten
+                
       backendRefs:
         - name: stable
           port: 8080

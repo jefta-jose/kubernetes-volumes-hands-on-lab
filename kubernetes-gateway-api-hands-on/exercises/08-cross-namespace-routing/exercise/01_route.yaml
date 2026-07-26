@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  # The application team owns this Route in its own namespace.
+  name: team-a-route
+  namespace: team-a
+spec:
+  parentRefs:
+    # Attach to the shared Gateway in the infra namespace.
+    - name: shared-gateway
+      namespace: infra
+  hostnames:
+    # This intersects with the Gateway's *.shared.gateway.local hostname.
+    - team-a.shared.gateway.local
+  rules:
+    - backendRefs:
+        # The backend Service is in another namespace. The ReferenceGrant in
+        # shared-services authorizes this cross-namespace reference.
+        - name: shared-api
+          namespace: shared-services
+          port: 8080

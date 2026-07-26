@@ -1,31 +1,42 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
+  # The platform team owns the shared production entry point.
   name: production-gateway
   namespace: infra
 spec:
+  # Envoy Gateway provides the data plane for this Gateway.
   gatewayClassName: eg
   listeners:
+    # Plain HTTP exists only so the team-a redirect Route can attach to it.
     - name: http
       protocol: HTTP
       port: 80
       hostname: app.final.gateway.local
       allowedRoutes:
         namespaces:
+          # Only Routes in explicitly labelled namespaces may attach.
           from: Selector
           selector:
             matchLabels:
               gateway-access: allowed
+    # HTTPS terminates TLS at Envoy before routing the HTTP request.
     - name: https
-      protocol: ________
-      port: ________
+      protocol: HTTPS
+      port: 443
       hostname: app.final.gateway.local
       tls:
-        mode: ________
+        mode: Terminate
         certificateRefs:
-          - name: ________
+          # Reuse the TLS Secret from Exercise 07. Because the Secret is in
+          # gateway-lab while this Gateway is in infra, its namespace must be
+          # explicit and 06-gateway-lab-tls-grant.yaml must authorize access.
+          - kind: Secret
+            name: gateway-lab-tls
+            namespace: gateway-lab
       allowedRoutes:
         namespaces:
+          # team-a already has gateway-access=allowed.
           from: Selector
           selector:
             matchLabels:

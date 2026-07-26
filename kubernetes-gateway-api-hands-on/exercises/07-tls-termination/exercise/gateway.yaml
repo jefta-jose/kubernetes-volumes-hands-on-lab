@@ -13,15 +13,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-    - name: ________
-      protocol: ________
-      port: ________
-      hostname: ________
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "secure.gateway.local"
       tls:
-        mode: ________
+        mode: Terminate
         certificateRefs:
           - kind: Secret
-            name: ________
+            name: gateway-lab-tls
       allowedRoutes:
         namespaces:
           from: Same
