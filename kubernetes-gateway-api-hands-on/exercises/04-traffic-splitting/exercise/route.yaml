@@ -10,9 +10,9 @@ spec:
     - split.gateway.local
   rules:
     - backendRefs:
-        - name: ________
+        - name: stable
           port: 8080
-          weight: ________
-        - name: ________
+          weight: 90
+        - name: canary
           port: 8080
-          weight: ________
+          weight: 10

@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  # The platform team owns this shared entry point in the infra namespace.
+  name: shared-gateway
+  namespace: infra
+spec:
+  # Use the Envoy Gateway controller configured in Exercise 01.
+  gatewayClassName: eg
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      # Accept subdomains such as team-a.shared.gateway.local.
+      hostname: "*.shared.gateway.local"
+      allowedRoutes:
+        namespaces:
+          # Permit Routes from namespaces carrying this label. The team-a
+          # namespace already has gateway-access=allowed.
+          from: Selector
+          selector:
+            matchLabels:
+              gateway-access: allowed

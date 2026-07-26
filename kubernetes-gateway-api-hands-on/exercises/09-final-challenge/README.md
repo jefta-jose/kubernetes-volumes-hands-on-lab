@@ -32,7 +32,8 @@ Architecture requirements:
 - `team-a` owns both HTTPRoutes.
 - `app.final.gateway.local` is the hostname.
 - HTTP redirects to HTTPS with status 301.
-- The HTTPS listener terminates TLS using `infra/final-tls`.
+- The HTTPS listener terminates TLS using the existing
+  `gateway-lab/gateway-lab-tls` Secret.
 - Cross-namespace backend access is authorized with least-privilege ReferenceGrants.
 
 ## 3. Incomplete files
@@ -41,11 +42,9 @@ Architecture requirements:
 find exercise -type f -maxdepth 1 -print
 ```
 
-Create the TLS Secret before applying the manifests:
-
-```bash
-../../scripts/create-tls-secret.sh infra final-tls app.final.gateway.local
-```
+The exercise reuses `gateway-lab/gateway-lab-tls`. Because the Gateway and
+Secret are in different namespaces, the certificate reference includes the
+Secret namespace and a dedicated `ReferenceGrant` authorizes it.
 
 ## 4. Run and test
 
@@ -119,7 +118,7 @@ Check that the redirect Route attaches to `sectionName: http` and that its hostn
 ### HTTPS handshake fails
 
 ```bash
-kubectl get secret final-tls -n infra
+kubectl get secret gateway-lab-tls -n gateway-lab
 kubectl describe gateway production-gateway -n infra
 ```
 
@@ -143,7 +142,6 @@ Only `/api` traffic is mirrored in this design. Send a new `/api` request and in
 ## 8. Completed solution
 
 ```bash
-../../scripts/create-tls-secret.sh infra final-tls app.final.gateway.local
 kubectl apply -f solution/
 ./validate.sh
 ```

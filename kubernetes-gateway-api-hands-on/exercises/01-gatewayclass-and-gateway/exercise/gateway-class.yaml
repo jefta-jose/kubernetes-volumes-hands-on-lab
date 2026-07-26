@@ -1,0 +1,13 @@
+# A GatewayClass represents a type of gateway available in the cluster.
+# The controllerName identifies the controller responsible for Gateways that reference this class.
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: lab-proxy-config
+    namespace: gateway-lab

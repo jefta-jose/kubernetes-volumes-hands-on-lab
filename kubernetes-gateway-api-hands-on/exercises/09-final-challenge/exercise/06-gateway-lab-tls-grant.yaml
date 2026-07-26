@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  # The reused TLS Secret is in gateway-lab, so this namespace owns the
+  # decision to let another namespace reference it.
+  name: allow-production-gateway-to-tls
+  namespace: gateway-lab
+spec:
+  from:
+    # The production Gateway in infra makes the certificate reference.
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: infra
+  to:
+    # Authorize only the reused TLS Secret, not every Secret in gateway-lab.
+    - group: ""
+      kind: Secret
+      name: gateway-lab-tls

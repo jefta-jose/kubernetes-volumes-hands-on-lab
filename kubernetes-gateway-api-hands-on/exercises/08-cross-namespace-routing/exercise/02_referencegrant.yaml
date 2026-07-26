@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  # NB ---- A grant belongs in the namespace of the referenced object. 
+  # The resource we want to hit
+  name: allow-team-a-to-shared-api
+  namespace: shared-services
+spec:
+  from:
+    # The from part says who is asking for permission. Here, HTTP routes from the team A namespace
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: team-a
+  to:
+    # The to part says which resource they can reference, 
+    # for example, the shared API service in the shared-services namespace.
+    - group: ""
+      kind: Service
+      name: shared-api
+
+# Allow HTTP routes from the team A namespace to reference the shared API service

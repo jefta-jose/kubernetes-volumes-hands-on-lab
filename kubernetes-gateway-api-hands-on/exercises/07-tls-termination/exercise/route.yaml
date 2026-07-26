@@ -6,10 +6,10 @@ metadata:
 spec:
   parentRefs:
     - name: lab-gateway
-      sectionName: ________
+      sectionName: https
   hostnames:
-    - ________
+    - secure.gateway.local
   rules:
     - backendRefs:
-        - name: ________
+        - name: stable
           port: 8080

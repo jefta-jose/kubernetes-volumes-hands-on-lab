@@ -7,30 +7,33 @@ spec:
   parentRefs:
     - name: lab-gateway
   hostnames:
-    - ________
+    - routing.gateway.local
   rules:
     - matches:
         - headers:
-            - name: ________
+            - name: X-Release
               type: Exact
-              value: ________
+              value: canary
       backendRefs:
-        - name: ________
+        - name: canary
           port: 8080
-    - matches:
-        - path:
-            type: ________
-            value: /auth
-      backendRefs:
-        - name: ________
-          port: 8080
+
     - matches:
         - path:
             type: PathPrefix
-            value: ________
+            value: /auth
+      backendRefs:
+        - name: auth
+          port: 8080
+
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /orders
       backendRefs:
         - name: orders
           port: 8080
+          
     - backendRefs:
-        - name: ________
+        - name: stable
           port: 8080

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-envoy_gateway_version="${ENVOY_GATEWAY_VERSION:-v1.8.3}"
+envoy_gateway_version="${ENVOY_GATEWAY_VERSION:-v1.8.2}"
 
 helm upgrade --install eg \
   oci://docker.io/envoyproxy/gateway-helm \

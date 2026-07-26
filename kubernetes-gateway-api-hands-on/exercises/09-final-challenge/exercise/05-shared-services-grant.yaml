@@ -1,14 +1,17 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
+  # shared-services owns the target Service and therefore owns this grant.
   name: allow-final-route-to-shared-api
   namespace: shared-services
 spec:
   from:
+    # Allow HTTPRoutes in team-a to make this backend reference.
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       namespace: team-a
   to:
+    # Permit only the specifically named shared-api Service.
     - group: ""
       kind: Service
-      name: ________
+      name: shared-api
